@@ -1,0 +1,9 @@
+Sprint points
+
+1. Receive and store interactive inputs from terminal
+2. Create lab files directories
+3. Define node (object) structure
+4. Manage data set (add - del - edit)
+5. Design application logic and build topology
+    5a. Collision domains analysis
+    5b. ??
