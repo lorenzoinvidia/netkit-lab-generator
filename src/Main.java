@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
 
         // Static data for the moment
-        int numberOfPC = 0; // Number of network PC
+        int numberOfPC = 0; // Number of network dataStructure.PC
         int numberOfRouter = 0; // Number of network router
         String defaultLabPath = "netkit-lab-generator/labTestFolder"; // Default lab path for testing
         List<String> nodes = new ArrayList<>(); // List of nodes ( Will be an array of network nodes! )
@@ -33,19 +33,19 @@ public class Main {
         try {
             /* ____________Add network nodes____________ */
 
-            // Request number of PC and print out for debug
-            System.out.print("Number of PC in the network: ");
+            // Request number of dataStructure.PC and print out for debug
+            System.out.print("Number of dataStructure.PC in the network: ");
             numberOfPC = Integer.parseInt(reader.readLine());
-            System.out.println("Number of PC: " + numberOfPC);
+            System.out.println("Number of dataStructure.PC: " + numberOfPC);
 
             // Request number of router and print out for debug
             System.out.print("Number of router in the network: ");
             numberOfRouter = Integer.parseInt(reader.readLine());
             System.out.println("Number of router: " + numberOfRouter);
 
-            // Request PC names
+            // Request dataStructure.PC names
             for (int i = 0; i < numberOfPC; i++) {
-                System.out.print("Insert PC " + (i+1) + " name: ");
+                System.out.print("Insert dataStructure.PC " + (i+1) + " name: ");
                 nodes.add(reader.readLine());
             }
 

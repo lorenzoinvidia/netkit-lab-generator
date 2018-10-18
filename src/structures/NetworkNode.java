@@ -1,7 +1,8 @@
+package structures;
+
 public class NetworkNode {
 
     /*
-        TYPE
         NAME
         ADDRESS
         NETMASK
