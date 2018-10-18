@@ -1,5 +1,9 @@
 package controllers;
 
+import structures.Interface;
+import structures.NetworkNode;
+import structures.PC;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +19,8 @@ public class MainController {
     private int numberOfPC;
     // Number of network router
     private int numberOfRouter;
-    // List of network nodes in the network ( will be an array of network nodes! )
-    private List<String> nodes;
+    // List of network nodes
+    private List<NetworkNode> nodes;
 
     public MainController() {
         this.br = new BufferedReader(new InputStreamReader(System.in));
@@ -41,11 +45,11 @@ public class MainController {
         this.numberOfRouter = numberOfRouter;
     }
 
-    public List<String> getNodes() {
+    public List<NetworkNode> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(List<String> nodes) {
+    public void setNodes(List<NetworkNode> nodes) {
         this.nodes = nodes;
     }
 
@@ -53,14 +57,34 @@ public class MainController {
         System.out.print("Number of PC in the network: ");
         this.numberOfPC = Integer.parseInt(br.readLine());
         System.out.println("Number of PC: " + numberOfPC);
+
     }
 
-    private void getPcNames() throws IOException {
+    private void getPcInformation() throws IOException {
+
+        String tempPCName;
+        Interface tempIface = new Interface("","","");
+
+
         for (int i = 0; i < this.numberOfPC; i++) {
-            System.out.print("Insert PC " + (i+1) + " name: ");
-            nodes.add(br.readLine());
+
+            System.out.print("PC " + (i+1) + " name: ");
+            tempPCName = br.readLine();
+
+            System.out.print("PC " + (i+1) + " ipAddress: ");
+            tempIface.setName(br.readLine());
+
+            System.out.print("PC " + (i+1) + " netMask: ");
+            tempIface.setGateway(br.readLine());
+
+            System.out.print("PC " + (i+1) + " gateway: ");
+            tempIface.setGateway(br.readLine());
+
+            // Create the PC
+            nodes.add(new PC(tempPCName, "", tempIface));
+
         }
-    }
+    }//getPcInformation()
 
     private void getRouterNumber() throws IOException {
         System.out.print("Number of router in the network: ");
@@ -68,32 +92,32 @@ public class MainController {
         System.out.println("Number of router: " + numberOfRouter);
     }
 
-    private void getRouterNames() throws IOException {
-        for (int i = 0; i < this.numberOfRouter; i++) {
-            System.out.print("Insert Router " + (i+1) + " name: ");
-            nodes.add(br.readLine());
-        }
-    }
+//    private void getRouterInformation() throws IOException {
+//        for (int i = 0; i < this.numberOfRouter; i++) {
+//            System.out.print("Insert Router " + (i+1) + " name: ");
+//            nodes.add(br.readLine());
+//        }
+//    }
 
-    private void createNodeFolder(String path, String node) throws IOException {
-        File actualPath = new File(path + File.separator + node + File.separator + "etc" + File.separator + "network");
+    private void createNodeFolder(String path, String nodeName) throws IOException {
+        File actualPath = new File(path + File.separator + nodeName + File.separator + "etc" + File.separator + "network");
         if(actualPath.isFile())
             System.out.println("Bad path! (the actual path is a file)");
         else if(actualPath.isDirectory())
-            System.out.println( node + " already exist at path: \"" + actualPath.getAbsolutePath() + "\"");
+            System.out.println( nodeName + " already exist at path: \"" + actualPath.getAbsolutePath() + "\"");
         else {
             if (actualPath.mkdirs()) {
-                System.out.println(node + " created at path: \"" + actualPath.getAbsolutePath() + "\"");
+                System.out.println(nodeName + " created at path: \"" + actualPath.getAbsolutePath() + "\"");
 
                 // create interfaces file
                 File interfaceFile = new File(actualPath.getAbsolutePath() + File.separator + "interfaces");
                 if(interfaceFile.createNewFile())
-                    System.out.println( "Interface file of " + node + " created at path: \"" + interfaceFile.getAbsolutePath() + "\"");
+                    System.out.println( "Interface file of " + nodeName + " created at path: \"" + interfaceFile.getAbsolutePath() + "\"");
                 else
-                    System.out.println( "Error on creating interface file of " + node + "(Exception to be fixed!)" );
+                    System.out.println( "Error on creating interface file of " + nodeName + "(Exception to be fixed!)" );
             }
             else
-                System.out.println( "Error on creating " + node + "(Exception to be fixed!)" );
+                System.out.println( "Error on creating " + nodeName + "(Exception to be fixed!)" );
         }
     }
 
@@ -109,23 +133,28 @@ public class MainController {
         }
     }
 
-    private void printNetwork() {
-        System.out.print("Final network nodes: ");
-        nodes.stream().reduce( (a, b) -> a + ", " + b).ifPresent(System.out::println);
-    }
+
+
+//    private void printNetwork() {
+//        System.out.print("Final network nodes: ");
+//        nodes.stream().reduce( (a, b) -> a + ", " + b).ifPresent(System.out::println);
+//    }
 
     public void init(String path) {
         try {
             // Request user input
             getPcNumber();
             getRouterNumber();
-            getPcNames();
-            getRouterNames();
+            getPcInformation();
+            //getRouterInformation(); //-------------> To be implemented
+
             // Print actual network
-            printNetwork();
+            //printNetwork(); //-------------> To be implemented
+
             // Create folder for nodes
-            for(String node : nodes)
-                createNodeFolder(path, node);
+            for(int i=0; i<nodes.size(); i++)
+                createNodeFolder(path, nodes.get(i).getName());
+            
             // Create lab conf file
             createLabConfFile(path);
         }

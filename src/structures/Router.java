@@ -2,13 +2,16 @@ package structures;
 
 public class Router extends NetworkNode {
 
-    //private int numOfInterfaces;
+    private int numOfInterfaces;
     private Interface[] ifaces;
     private String routingProtocol;
 
-    public Router(Interface[] ifaces, String rProtocol){
+    public Router(String name, String path, int numIface, Interface[] ifaces, String rProtocol){
+
+        super(name, path);
         this.ifaces = ifaces;
         this.routingProtocol = rProtocol;
+        this.numOfInterfaces = numIface;
     }
 
     public Interface[] getIfaces() {
@@ -25,5 +28,13 @@ public class Router extends NetworkNode {
 
     public void setRoutingProtocol(String routingProtocol) {
         this.routingProtocol = routingProtocol;
+    }
+
+    public int getNumOfInterfaces() {
+        return numOfInterfaces;
+    }
+
+    public void setNumOfInterfaces(int numOfInterfaces) {
+        this.numOfInterfaces = numOfInterfaces;
     }
 }
