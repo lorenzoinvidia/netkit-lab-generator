@@ -1,8 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Main {
 
@@ -15,6 +20,13 @@ public class Main {
         List<String> nodes = new ArrayList<>(); // List of nodes ( Will be an array of network nodes! )
         List<File> nodesPath = new ArrayList<>(); // List of nodes path
 
+        // DEBUG: Remove all file inside labTestFolder
+        try {
+            Files.walk(Paths.get(defaultLabPath)).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        }
+        catch ( IOException ex) {
+            ex.printStackTrace();
+        }
         // Object reader
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -61,8 +73,7 @@ public class Main {
                         System.out.println(node + " created at path: \"" + actualPath.getAbsolutePath() + "\"");
 
                         // create interfaces file
-
-                        File interfaceFile = new File(actualPath.getAbsolutePath() + File.separator + "interface");
+                        File interfaceFile = new File(actualPath.getAbsolutePath() + File.separator + "interfaces");
                         if(interfaceFile.createNewFile())
                             System.out.println( "Interface file of " + node + " created at path: \"" + interfaceFile.getAbsolutePath() + "\"");
                         else
