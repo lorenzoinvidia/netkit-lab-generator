@@ -8,11 +8,7 @@ import controllers.MainController;
 
 public class Main {
 
-    public static void main(String[] args) {
-
-        // Static data for the moment
-        String defaultLabPath = "netkit-lab-generator/labTestFolder"; // Default lab path for testing
-
+    private static void initLaboratoryTest(String defaultLabPath) {
 
         // Remove all file inside labTestFolder
         File tempFile = new File(defaultLabPath);
@@ -26,6 +22,15 @@ public class Main {
         }
         else
             tempFile.mkdirs();
+    }
+
+    public static void main(String[] args) {
+
+        // Static data for the moment
+        String defaultLabPath = "netkit-lab-generator/labTestFolder"; // Default lab path for testing
+
+        // Init laboratory
+        initLaboratoryTest(defaultLabPath);
 
         // Create new File Controller and request all user data
         MainController fc = new MainController();
