@@ -2,6 +2,9 @@ package structures;
 
 public class NetworkNode {
 
+    private String name;
+    private String path;
+
     public String getName() {
         return name;
     }
@@ -17,9 +20,4 @@ public class NetworkNode {
     public void setPath(String path) {
         this.path = path;
     }
-
-    private String name;
-    private String path;
-
-
 }

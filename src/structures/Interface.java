@@ -2,6 +2,11 @@ package structures;
 
 public class Interface {
 
+    private String name;
+    private String address;
+    private String netmask;
+    private String gateway;
+
     public String getName() {
         return name;
     }
@@ -33,10 +38,4 @@ public class Interface {
     public void setGateway(String gateway) {
         this.gateway = gateway;
     }
-
-    private String name;
-    private String address;
-    private String netmask;
-    private String gateway;
-
 }
