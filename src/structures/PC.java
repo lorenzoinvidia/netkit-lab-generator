@@ -5,7 +5,6 @@ public class PC extends NetworkNode {
     private Interface iface;
 
     public PC(String name, String path, Interface iface) {
-
         super(name, path);
         this.iface = iface;
     }

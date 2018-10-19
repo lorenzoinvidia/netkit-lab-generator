@@ -54,6 +54,6 @@ public class Router extends NetworkNode {
         return String.format("Router name: %s \n\t Router protocol: %s \n\t Interfaces: %s\n\t",
                 getName(),
                 getRoutingProtocol(),
-                Arrays.stream(getInterfaces()).map(Interface::toString).collect(Collectors.joining("\n")));
+                Arrays.stream(getInterfaces()).map(Interface::toString).collect(Collectors.joining("")));
     }
 }

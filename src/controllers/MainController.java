@@ -82,25 +82,34 @@ public class MainController {
 
             // PC name
             System.out.print("PC " + (i+1) + " name: ");
-            tempPCName = br.readLine();
+
+            if ((tempPCName = br.readLine()) == null) {
+                getPcInformation();
+            }
 
             // IFACE address
             System.out.print("\tPC " + (i+1) + " IP address: ");
-            tempIpAddress = br.readLine();
+            if ((tempIpAddress = br.readLine()) == null) {
+                getPcInformation();
+            }
 
             // IFACE netmask
             System.out.print("\tPC " + (i+1) + " netmask: ");
-            tempNetMask = br.readLine();
+            if ((tempNetMask = br.readLine()) == null) {
+                getPcInformation();
+            }
 
             // IFACE gateway
             System.out.print("\tPC " + (i+1) + " gateway: ");
-            tempGateway = br.readLine();
+            if ((tempGateway = br.readLine()) == null) {
+                getPcInformation();
+            }
 
             // Create the PC with single interface
             nodes.add(new PC(tempPCName, "", new Interface("eth0", tempIpAddress, tempNetMask, tempGateway)));
-
         }
     }
+
 
     private void getRouterNumber() throws IOException {
         System.out.print("Number of router: ");
@@ -110,24 +119,20 @@ public class MainController {
 
     private void getRouterInformation() throws IOException {
 
-        String tempRouterName;
-        Interface[] ifaces;
-
         for (int i = 0; i < this.numberOfRouter; i++) {
 
             System.out.print("Router " + (i+1) + " name: ");
-            tempRouterName = br.readLine();
+            String routerName = br.readLine();
 
-            ifaces = getRouterInterfaces(tempRouterName);
+            Interface[] ifaces = getRouterInterfaces(routerName);
 
             if (ifaces != null)
                 // Create the router
-                nodes.add(new Router(tempRouterName, "", ifaces.length, ifaces, "STATIC"));
+                nodes.add(new Router(routerName, "", ifaces.length, ifaces, "STATIC"));
             else
                 System.out.println("ifaces array is empty");
         }
     }
-
 
     // Setup the router interfaces
     private Interface[] getRouterInterfaces(String routerName) throws IOException{
@@ -147,19 +152,22 @@ public class MainController {
 
                 // IFACE address
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " IP address: ");
-                tempIpAddress = br.readLine();
+                if((tempIpAddress = br.readLine()) == null)
+                    getRouterInterfaces(routerName);
 
                 //--------> SHOULD BE A CHECK ON IP ADDRESS FORMAT HERE !!
 
                 // IFACE netmask
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Netmask: ");
-                tempNetMask = br.readLine();
+                if((tempNetMask = br.readLine()) == null)
+                    getRouterInterfaces(routerName);
 
                 //--------> SHOULD BE A CHECK ON netmask FORMAT HERE !!
 
                 // IFACE gateway
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Gateway: ");
-                tempGateway = br.readLine();
+                if((tempGateway = br.readLine()) == null)
+                    getRouterInterfaces(routerName);
 
                 //--------> SHOULD BE A CHECK ON gateway FORMAT HERE !!
 
