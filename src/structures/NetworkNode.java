@@ -1,11 +1,11 @@
 package structures;
 
-public class NetworkNode {
+public abstract class NetworkNode {
 
     private String name;
     private String path;
 
-    public  NetworkNode(String name, String path){
+    public NetworkNode(String name, String path){
         this.name = name;
         this.path = path;
     }
@@ -24,5 +24,10 @@ public class NetworkNode {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }
