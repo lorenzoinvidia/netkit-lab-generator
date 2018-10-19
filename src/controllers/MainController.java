@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,12 +68,32 @@ public class MainController {
         return this.nodes.stream().filter(Router.class::isInstance).map(Router.class::cast).collect(Collectors.toList());
     }
 
+
+
+    public static boolean isParsable(String input){
+        boolean parsable = true;
+        try{
+            Integer.parseInt(input);
+        }catch(Exception e){
+            parsable = false;
+        }
+        return parsable;
+    }
+
+
     private void getPcNumber() throws IOException {
         System.out.print("Number of PC: ");
-        this.numberOfPC = Integer.parseInt(br.readLine());
-        System.out.println("(DEBUG) Number of PC: " + numberOfPC); // Debug
+        String temp = br.readLine();
 
-    }
+        if(isParsable(temp)) {
+            this.numberOfPC = Integer.parseInt(temp);
+            System.out.println("(DEBUG) Number of PC: " + numberOfPC); //DEBUG
+        }else {
+            System.out.println("Insert a valid number!");
+            getPcNumber();
+            return;
+        }
+    }//getPcNumber()
 
     private void getPcInformation() throws IOException {
 
@@ -82,105 +103,159 @@ public class MainController {
 
             // PC name
             System.out.print("PC " + (i+1) + " name: ");
-
-            if ((tempPCName = br.readLine()) == null) {
+            tempPCName = br.readLine();
+            if (tempPCName == null || tempPCName.isEmpty()) {
+                System.out.println("This field cannot be empty!");
                 getPcInformation();
+                return;
             }
 
             // IFACE address
             System.out.print("\tPC " + (i+1) + " IP address: ");
-            if ((tempIpAddress = br.readLine()) == null) {
+            tempIpAddress = br.readLine();
+            if (tempIpAddress == null || tempIpAddress.isEmpty()) {
+                System.out.println("This field cannot be empty!");
                 getPcInformation();
+                return;
             }
 
             // IFACE netmask
             System.out.print("\tPC " + (i+1) + " netmask: ");
-            if ((tempNetMask = br.readLine()) == null) {
+            tempNetMask = br.readLine();
+            if (tempNetMask == null || tempNetMask.isEmpty()) {
+                System.out.println("This field cannot be empty!");
                 getPcInformation();
+                return;
             }
 
             // IFACE gateway
             System.out.print("\tPC " + (i+1) + " gateway: ");
-            if ((tempGateway = br.readLine()) == null) {
+            tempGateway = br.readLine();
+            if (tempGateway == null || tempGateway.isEmpty()) {
+                System.out.println("This field cannot be empty!");
                 getPcInformation();
+                return;
             }
 
             // Create the PC with single interface
             nodes.add(new PC(tempPCName, "", new Interface("eth0", tempIpAddress, tempNetMask, tempGateway)));
         }
-    }
+    }//getPcInformation()
 
 
     private void getRouterNumber() throws IOException {
         System.out.print("Number of router: ");
-        this.numberOfRouter = Integer.parseInt(br.readLine());
-        System.out.println("(DEBUG) Number of router: " + numberOfRouter); // Debug
-    }
+        String temp = br.readLine();
+
+        if(isParsable(temp)) {
+            this.numberOfRouter = Integer.parseInt(temp);
+            System.out.println("(DEBUG) Number of router: " + numberOfRouter); //DEBUG
+        }else {
+            System.out.println("Insert a valid number!");
+            getRouterNumber();
+            return;
+        }
+    }//getRouterNumber()
+
+
 
     private void getRouterInformation() throws IOException {
 
-        for (int i = 0; i < this.numberOfRouter; i++) {
+        for(int i = 0; i < this.numberOfRouter; i++) {
 
             System.out.print("Router " + (i+1) + " name: ");
             String routerName = br.readLine();
 
+            if(routerName == null || routerName.isEmpty()) {
+                System.out.println("This field cannot be empty!");
+                getRouterInformation();
+                return;
+            }
+
             Interface[] ifaces = getRouterInterfaces(routerName);
 
-            if (ifaces != null)
+            if (ifaces != null) {
+                System.out.println("(DEBUG) Create the router . . .");
                 // Create the router
                 nodes.add(new Router(routerName, "", ifaces.length, ifaces, "STATIC"));
-            else
+            }else {
                 System.out.println("ifaces array is empty");
+                getRouterInformation();
+                return;
+            }
         }
-    }
+    }//getRouterInformation()
+
+
 
     // Setup the router interfaces
     private Interface[] getRouterInterfaces(String routerName) throws IOException{
 
+        int numOfInterfaces = 0;
+
         System.out.print("\tIfaces number of " + routerName + ": ");
-        int tempNumOfInterfaces = Integer.parseInt(br.readLine());
+        String temp = br.readLine();
 
-        if (tempNumOfInterfaces >= 1){
-            Interface[] tempIfaces = new Interface[tempNumOfInterfaces];
+        if(isParsable(temp)){
+            numOfInterfaces = Integer.parseInt(temp);
+            System.out.println("\t(DEBUG) Number of interfaces: " + numOfInterfaces); //DEBUG
+        }else {
+            System.out.println("Insert a valid number!");
+            return null;
+        }
 
-            for(int i=0; i<tempNumOfInterfaces; i++){
+
+
+        if (numOfInterfaces > 0){
+            Interface[] tempIfaces = new Interface[numOfInterfaces];
+
+            for(int i=0; i<numOfInterfaces; i++){
 
                 String tempIfaceName, tempIpAddress, tempNetMask, tempGateway;
 
                 // IFACE name
                 tempIfaceName = "eth" + String.valueOf(i); // default iface name "ethINDEX"
 
+
                 // IFACE address
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " IP address: ");
-                if((tempIpAddress = br.readLine()) == null)
-                    getRouterInterfaces(routerName);
-
+                tempIpAddress = br.readLine();
+                if(tempIpAddress == null || tempIpAddress.isEmpty()) {
+                    System.out.println("\t\tThis field cannot be empty!");
+                    return null;
+                }
                 //--------> SHOULD BE A CHECK ON IP ADDRESS FORMAT HERE !!
+
 
                 // IFACE netmask
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Netmask: ");
-                if((tempNetMask = br.readLine()) == null)
-                    getRouterInterfaces(routerName);
-
+                tempNetMask = br.readLine();
+                if(tempNetMask == null || tempNetMask.isEmpty()) {
+                    System.out.println("\t\tThis field cannot be empty!");
+                    return null;
+                }
                 //--------> SHOULD BE A CHECK ON netmask FORMAT HERE !!
+
 
                 // IFACE gateway
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Gateway: ");
-                if((tempGateway = br.readLine()) == null)
-                    getRouterInterfaces(routerName);
-
+                tempGateway = br.readLine();
+                if(tempGateway == null || tempGateway.isEmpty()) {
+                    System.out.println("\t\tThis field cannot be empty!");
+                    return null;
+                }
                 //--------> SHOULD BE A CHECK ON gateway FORMAT HERE !!
+
 
                 tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, tempGateway);
             }
             return tempIfaces;
+
+        } else {
+            System.out.println("\tNumber of interfaces must be 1 at least!");
+            return null;
         }
-        else {
-            System.out.println("Number of interfaces must be 1 at least!");
-            getRouterInterfaces(routerName);
-        }
-        return null;
-    }
+    }//getRouterInterfaces()
 
 
     private void createNodeFolder(String path, String nodeName) throws IOException {
