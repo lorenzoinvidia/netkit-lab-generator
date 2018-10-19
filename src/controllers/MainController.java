@@ -3,6 +3,7 @@ package controllers;
 import structures.Interface;
 import structures.NetworkNode;
 import structures.PC;
+import structures.Router;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,29 +55,36 @@ public class MainController {
     }
 
     private void getPcNumber() throws IOException {
-        System.out.print("Number of PC in the network: ");
+        System.out.print("Number of PC: ");
         this.numberOfPC = Integer.parseInt(br.readLine());
-        System.out.println("Number of PC: " + numberOfPC);
+        System.out.println("(DEBUG) Number of PC: " + numberOfPC);//DEBUG
 
     }
 
     private void getPcInformation() throws IOException {
 
         String tempPCName;
-        Interface tempIface = new Interface("","","");
+        Interface tempIface = new Interface();
 
 
         for (int i = 0; i < this.numberOfPC; i++) {
 
+            //PC NAME
             System.out.print("PC " + (i+1) + " name: ");
             tempPCName = br.readLine();
 
+            //IFACE NAME
+            tempIface.setName("eth0");//default eth0
+
+            //IFACE ADDR
             System.out.print("PC " + (i+1) + " ipAddress: ");
-            tempIface.setName(br.readLine());
+            tempIface.setAddress(br.readLine());
 
+            //IFACE NETMASK
             System.out.print("PC " + (i+1) + " netMask: ");
-            tempIface.setGateway(br.readLine());
+            tempIface.setNetmask(br.readLine());
 
+            //IFACE GATEWAY
             System.out.print("PC " + (i+1) + " gateway: ");
             tempIface.setGateway(br.readLine());
 
@@ -87,17 +95,94 @@ public class MainController {
     }//getPcInformation()
 
     private void getRouterNumber() throws IOException {
-        System.out.print("Number of router in the network: ");
+        System.out.print("Number of router: ");
         this.numberOfRouter = Integer.parseInt(br.readLine());
-        System.out.println("Number of router: " + numberOfRouter);
+        System.out.println("(DEBUG) Number of router: " + numberOfRouter);//DEBUG
     }
 
-//    private void getRouterInformation() throws IOException {
-//        for (int i = 0; i < this.numberOfRouter; i++) {
-//            System.out.print("Insert Router " + (i+1) + " name: ");
-//            nodes.add(br.readLine());
-//        }
-//    }
+    private void getRouterInformation() throws IOException {
+
+        String tempRouterName;
+        Interface[] ifaces;
+
+        for (int i = 0; i < this.numberOfRouter; i++) {
+
+            System.out.print("Router " + (i+1) + " name: ");
+            tempRouterName = br.readLine();
+
+            ifaces = getRouterInterfaces(tempRouterName);
+
+            if (ifaces != null){
+                // Create the router
+                nodes.add(new Router(tempRouterName, "", ifaces.length, ifaces, "STATIC"));
+
+                //DEBUG
+                for (int j=0; j<ifaces.length; j++) {
+                    System.out.println("Interface (" + ifaces[j].getName() + "): " + "\n" +
+                            "IP addr: " + ifaces[j].getAddress() + "\n" +
+                            "Netmask: " + ifaces[j].getNetmask() + "\n" +
+                            "Gateway: " + ifaces[j].getGateway() + "\n");
+                }
+
+            } else {
+                System.out.println("ifaces array is NULL");
+            }
+
+        }//for loop
+    }//getRouterInformation()
+
+
+    // Setup the router interfaces
+    private Interface[] getRouterInterfaces(String routerName) throws IOException{
+
+        String tempRouterName = routerName;
+
+        System.out.print("Num of ifaces: ");
+        int tempNumOfInterfaces = br.read();
+
+        if (tempNumOfInterfaces >= 1){
+            //continue execution
+
+            Interface[] tempIfaces = new Interface[tempNumOfInterfaces];
+
+            for(int i=0; i<tempNumOfInterfaces; i++){
+
+                tempIfaces[i] = new Interface();
+
+                String index = "eth" + String.valueOf(i);
+                //System.out.print(index);//DEBUG
+
+                //IFACE NAME
+                tempIfaces[i].setName(index); //default iface name ethINDEX
+
+                //IFACE IP ADDRESS
+                System.out.print("Interface (" + tempIfaces[i].getName() + ")" + " IP address: ");
+                tempIfaces[i].setAddress(br.readLine());
+                //--------> SHOULD BE A CHECK ON IP ADDRESS FORMAT HERE !!
+
+                //IFACE NETMASK
+                System.out.print("Interface (" + tempIfaces[i].getName() + ")" + " Netmask: ");
+                tempIfaces[i].setNetmask(br.readLine());
+                //--------> SHOULD BE A CHECK ON netmask FORMAT HERE !!
+
+                //IFACE GATEWAY
+                System.out.print("Interface (" + tempIfaces[i].getName() + ")" + " Gateway: ");
+                tempIfaces[i].setGateway(br.readLine());
+                //--------> SHOULD BE A CHECK ON gateway FORMAT HERE !!
+
+            }//for loop
+
+            return tempIfaces;
+
+        }else{
+            System.out.println("Num of iface must be 1 at least!");
+            getRouterInterfaces(routerName);
+        }
+
+        return null;
+
+    }//getRouterInterfaces()
+
 
     private void createNodeFolder(String path, String nodeName) throws IOException {
         File actualPath = new File(path + File.separator + nodeName + File.separator + "etc" + File.separator + "network");
@@ -146,7 +231,7 @@ public class MainController {
             getPcNumber();
             getRouterNumber();
             getPcInformation();
-            //getRouterInformation(); //-------------> To be implemented
+            getRouterInformation();
 
             // Print actual network
             //printNetwork(); //-------------> To be implemented

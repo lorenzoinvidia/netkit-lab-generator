@@ -7,14 +7,6 @@ public class Interface {
     private String netmask;
     private String gateway;
 
-    public Interface(String address, String netmask, String gateway){
-
-        this.name = "";         // will be assigned next
-        this.address = address; // ex. 10.10.10.10
-        this.netmask = netmask; // ex. 24 (stands for /24 or 255.255.255.0)
-        this.gateway = gateway; // ex. 10.10.10.1
-    }
-
     public String getName() {
         return name;
     }

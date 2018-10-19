@@ -10,7 +10,7 @@ public class Router extends NetworkNode {
 
         super(name, path);
         this.ifaces = ifaces;
-        this.routingProtocol = rProtocol;
+        this.routingProtocol = rProtocol; //default: STATIC
         this.numOfInterfaces = numIface;
     }
 
