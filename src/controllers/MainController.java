@@ -5,10 +5,7 @@ import structures.NetworkNode;
 import structures.PC;
 import structures.Router;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -321,6 +318,22 @@ public class MainController {
         }
     }
 
+    private void createStartupFile(String path, NetworkNode node) throws IOException {
+        File filePath = new File(path + File.separator + node.getName() + ".startup");
+        if(filePath.exists())
+            System.out.println(node.getName() + ".startup file already exist at path: \"" + filePath.getAbsolutePath() + "\"");
+        else {
+            if(filePath.createNewFile()) {
+                FileOutputStream fos = new FileOutputStream(filePath);
+                PrintStream ps = new PrintStream(fos);
+                ps.println("/etc/init.d/networking restart");
+                System.out.println(node.getName() + ".startup created at path: \"" + filePath.getAbsolutePath() + "\"");
+            }
+            else
+                System.out.println( "Error on creating " + node.getName() + ".startup (Exception to be fixed!)");
+        }
+    }
+
 
 
     private void printNetwork() {
@@ -340,9 +353,11 @@ public class MainController {
             // Print actual network
             printNetwork();
 
-            // Create folder for nodes
-            for(NetworkNode node : nodes)
+            // Create folder and startup files for nodes
+            for(NetworkNode node : nodes) {
                 createNodeFolder(path, node);
+                createStartupFile(path, node);
+            }
 
             // Create lab conf file
             createLabConfFile(path);
