@@ -140,7 +140,7 @@ public class MainController {
         System.out.print("\tIfaces number of " + routerName + ": ");
         int tempNumOfInterfaces = Integer.parseInt(br.readLine());
 
-        if (tempNumOfInterfaces >= 1){
+        if (tempNumOfInterfaces >= 1) {
             Interface[] tempIfaces = new Interface[tempNumOfInterfaces];
 
             for(int i=0; i<tempNumOfInterfaces; i++){
@@ -183,25 +183,28 @@ public class MainController {
     }
 
 
-    private void createNodeFolder(String path, String nodeName) throws IOException {
-        File actualPath = new File(path + File.separator + nodeName + File.separator + "etc" + File.separator + "network");
+    private void createNodeFolder(String path, NetworkNode node) throws IOException {
+        File actualPath = new File(path + File.separator + node.getName() + File.separator + "etc" + File.separator + "network");
         if(actualPath.isFile())
             System.out.println("Bad path! (the actual path is a file)");
         else if(actualPath.isDirectory())
-            System.out.println( nodeName + " already exist at path: \"" + actualPath.getAbsolutePath() + "\"");
+            System.out.println( node.getName() + " already exist at path: \"" + actualPath.getAbsolutePath() + "\"");
         else {
             if (actualPath.mkdirs()) {
-                System.out.println(nodeName + " created at path: \"" + actualPath.getAbsolutePath() + "\"");
+                System.out.println(node.getName() + " created at path: \"" + actualPath.getAbsolutePath() + "\"");
+
+                // set path to node
+                node.setPath(path + File.separator + node.getName() + File.separator + "etc" + File.separator + "network");
 
                 // create interfaces file
                 File interfaceFile = new File(actualPath.getAbsolutePath() + File.separator + "interfaces");
                 if(interfaceFile.createNewFile())
-                    System.out.println( "Interface file of " + nodeName + " created at path: \"" + interfaceFile.getAbsolutePath() + "\"");
+                    System.out.println( "Interface file of " + node.getName() + " created at path: \"" + interfaceFile.getAbsolutePath() + "\"");
                 else
-                    System.out.println( "Error on creating interface file of " + nodeName + "(Exception to be fixed!)" );
+                    System.out.println( "Error on creating interface file of " + node.getName() + "(Exception to be fixed!)" );
             }
             else
-                System.out.println( "Error on creating " + nodeName + "(Exception to be fixed!)" );
+                System.out.println( "Error on creating " + node.getName() + "(Exception to be fixed!)" );
         }
     }
 
@@ -238,7 +241,7 @@ public class MainController {
 
             // Create folder for nodes
             for(NetworkNode node : nodes)
-                createNodeFolder(path, node.getName());
+                createNodeFolder(path, node);
             
             // Create lab conf file
             createLabConfFile(path);

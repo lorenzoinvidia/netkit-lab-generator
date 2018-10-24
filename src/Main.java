@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 
-
 public class Main {
 
     private static void initLaboratoryTest(String defaultLabPath) {
