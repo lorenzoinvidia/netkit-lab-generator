@@ -39,7 +39,9 @@ public class InterfaceController {
             ps.println("auto " + iface.getName());
             ps.println("iface " + iface.getName() + " inet static");
             ps.println("\taddress " + iface.getAddress());
-            ps.println("\tnetmask " + iface.getNetmask());
+
+            String tempNetmask = iface.getNetmask();
+            ps.println("\tnetmask " + iface.setupNetmask(tempNetmask));
             ps.println("\tgateway " + iface.getGateway());
             ps.close();
         }
@@ -58,7 +60,9 @@ public class InterfaceController {
                 ps.println("auto " + iface.getName());
                 ps.println("iface " + iface.getName() + " inet " + router.getRoutingProtocol());
                 ps.println("\taddress " + iface.getAddress());
-                ps.println("\tnetmask " + iface.getNetmask());
+
+                String tempNetmask = iface.getNetmask();
+                ps.println("\tnetmask " + iface.setupNetmask(tempNetmask));
                 ps.println();
             }
             ps.close();
