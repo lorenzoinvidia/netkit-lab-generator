@@ -303,9 +303,13 @@ public class MainController {
             // Create lab conf file
             createLabConfFile(path);
 
-            // Call Interface controller to modify interfaces file
+            // Call Interface controller to modify interfaces files
             InterfaceController ic = new InterfaceController(nodes);
             ic.writeInterfaces();
+
+            // Call Domain controller to modify lab conf file
+            DomainController dc = new DomainController(path, getPC(), getRouter());
+            dc.writeLabConf();
         }
         catch ( IOException ex ) {
             ex.printStackTrace();
