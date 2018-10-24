@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -27,6 +28,10 @@ public class MainController {
 
     // List of network nodes
     private List<NetworkNode> nodes;
+
+    // Pattern
+    private static final Pattern PATTERN = Pattern.compile(
+            "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 
     public MainController() {
         this.br = new BufferedReader(new InputStreamReader(System.in));
@@ -68,6 +73,27 @@ public class MainController {
     }
 
 
+    // Validate IP address
+    public boolean validateIP(final String ip) {
+        return PATTERN.matcher(ip).matches();
+    }
+
+    // Validate Netmask
+    public boolean validateNetmask(final String nMask){
+
+        if ( (nMask.length() <= 2) && (isParsable(nMask))) {
+            int parsedInt = Integer.parseInt(nMask);
+
+            if ( (parsedInt >= 8) && (parsedInt < 32) ){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }//validateNetmask()
+
 
     private static boolean isParsable(String input){
         boolean parsable = true;
@@ -77,7 +103,7 @@ public class MainController {
             parsable = false;
         }
         return parsable;
-    }
+    }//isParsable()
 
 
     private void getPcNumber() throws IOException {
@@ -86,7 +112,7 @@ public class MainController {
 
         if(isParsable(temp)) {
             this.numberOfPC = Integer.parseInt(temp);
-            System.out.println("(DEBUG) Number of PC: " + numberOfPC); //DEBUG
+            //System.out.println("(DEBUG) Number of PC: " + numberOfPC); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             getPcNumber();
@@ -115,6 +141,10 @@ public class MainController {
                 System.out.println("This field cannot be empty!");
                 getPcInformation();
                 return;
+            }else if(!validateIP(tempIpAddress)){
+                System.out.println("Address is not in the correct format!");
+                getPcInformation();
+                return;
             }
 
             // IFACE netmask
@@ -124,6 +154,10 @@ public class MainController {
                 System.out.println("This field cannot be empty!");
                 getPcInformation();
                 return;
+            }else if (!validateNetmask(tempNetMask)){
+                System.out.println("Netmask is not in the correct format!");
+                getPcInformation();
+                return;
             }
 
             // IFACE gateway
@@ -131,6 +165,10 @@ public class MainController {
             tempGateway = br.readLine();
             if (tempGateway == null || tempGateway.isEmpty()) {
                 System.out.println("This field cannot be empty!");
+                getPcInformation();
+                return;
+            }else if(!validateIP(tempGateway)){
+                System.out.println("Gateway is not in the correct format!");
                 getPcInformation();
                 return;
             }
@@ -147,7 +185,7 @@ public class MainController {
 
         if(isParsable(temp)) {
             this.numberOfRouter = Integer.parseInt(temp);
-            System.out.println("(DEBUG) Number of router: " + numberOfRouter); //DEBUG
+            //System.out.println("(DEBUG) Number of router: " + numberOfRouter); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             getRouterNumber();
@@ -195,7 +233,7 @@ public class MainController {
 
         if(isParsable(temp)){
             numOfInterfaces = Integer.parseInt(temp);
-            System.out.println("\t(DEBUG) Number of interfaces: " + numOfInterfaces); //DEBUG
+            //System.out.println("\t(DEBUG) Number of interfaces: " + numOfInterfaces); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             return null;
@@ -217,8 +255,11 @@ public class MainController {
                 if(tempIpAddress == null || tempIpAddress.isEmpty()) {
                     System.out.println("\t\tThis field cannot be empty!");
                     return null;
+                }else if(!validateIP(tempIpAddress)){
+                    System.out.println("\t\tAddress is not in the correct format!");
+                    getPcInformation();
+                    return null;
                 }
-                //--------> SHOULD BE A CHECK ON IP ADDRESS FORMAT HERE !!
 
                 // IFACE netmask
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Netmask: ");
@@ -226,8 +267,11 @@ public class MainController {
                 if(tempNetMask == null || tempNetMask.isEmpty()) {
                     System.out.println("\t\tThis field cannot be empty!");
                     return null;
+                }else if (!validateNetmask(tempNetMask)){
+                    System.out.println("\t\tNetmask is not in the correct format!");
+                    getPcInformation();
+                    return null;
                 }
-                //--------> SHOULD BE A CHECK ON netmask FORMAT HERE !!
 
                 tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, "");
             }

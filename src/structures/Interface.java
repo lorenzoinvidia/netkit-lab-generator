@@ -53,9 +53,11 @@ public class Interface {
             return String.format("\n\t\t Interface name: %s \n\t\t Interface address: %s \n\t\t Interface netmask: %s \n\t\t Interface gateway: %s", getName(), getAddress(), getNetmask(), getGateway());
     }
 
-    public String setupNetmask(int cidrMask){
+    public String setupNetmask(String nMask) {
+        int parsedInt = Integer.parseInt(nMask);
         long bits = 0;
-        bits = 0xffffffff ^ (1 << 32 - cidrMask) - 1;
+        bits = 0xffffffff ^ (1 << 32 - parsedInt) - 1;
         return String.format("%d.%d.%d.%d", (bits & 0x0000000000ff000000L) >> 24, (bits & 0x0000000000ff0000) >> 16, (bits & 0x0000000000ff00) >> 8, bits & 0xff);
     }//setupNetmask()
+
 }
