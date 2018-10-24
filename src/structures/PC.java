@@ -9,7 +9,7 @@ public class PC extends NetworkNode {
         this.iface = iface;
     }
 
-    public Interface getInterfaces() {
+    public Interface getInterface() {
         return iface;
     }
 
@@ -19,6 +19,6 @@ public class PC extends NetworkNode {
 
     @Override
     public String toString() {
-        return String.format("PC name: %s \n\t Interface: %s \n\t", getName(), getInterfaces().toString());
+        return String.format("PC name: %s \n\t Interface: %s \n\t", getName(), getInterface().toString());
     }
 }

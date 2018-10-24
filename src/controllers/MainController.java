@@ -211,7 +211,6 @@ public class MainController {
                 // IFACE name
                 tempIfaceName = "eth" + String.valueOf(i); // default iface name "ethINDEX"
 
-
                 // IFACE address
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " IP address: ");
                 tempIpAddress = br.readLine();
@@ -220,7 +219,6 @@ public class MainController {
                     return null;
                 }
                 //--------> SHOULD BE A CHECK ON IP ADDRESS FORMAT HERE !!
-
 
                 // IFACE netmask
                 System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Netmask: ");
@@ -298,12 +296,12 @@ public class MainController {
             // Print actual network
             printNetwork();
 
-            // Create lab conf file
-            createLabConfFile(path);
-
             // Create folder for nodes
             for(NetworkNode node : nodes)
                 createNodeFolder(path, node);
+
+            // Create lab conf file
+            createLabConfFile(path);
 
             // Call Interface controller to modify interfaces file
             InterfaceController ic = new InterfaceController(nodes);

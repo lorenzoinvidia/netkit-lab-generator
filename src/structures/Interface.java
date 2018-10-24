@@ -47,7 +47,10 @@ public class Interface {
 
     @Override
     public String toString() {
-        return String.format("\n\t\t Interface name: %s \n\t\t Interface address: %s \n\t\t Interface netmask: %s \n\t\t Interface gateway: %s", getName(), getAddress(), getNetmask(), getGateway());
+        if(getGateway().equals(""))
+            return String.format("\n\t\t Interface name: %s \n\t\t Interface address: %s \n\t\t Interface netmask: %s", getName(), getAddress(), getNetmask());
+        else
+            return String.format("\n\t\t Interface name: %s \n\t\t Interface address: %s \n\t\t Interface netmask: %s \n\t\t Interface gateway: %s", getName(), getAddress(), getNetmask(), getGateway());
     }
 
     public String setupNetmask(int cidrMask){
