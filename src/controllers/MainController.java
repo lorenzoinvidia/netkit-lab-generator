@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,7 +69,7 @@ public class MainController {
 
 
 
-    public static boolean isParsable(String input){
+    private static boolean isParsable(String input){
         boolean parsable = true;
         try{
             Integer.parseInt(input);
@@ -91,7 +90,6 @@ public class MainController {
         }else {
             System.out.println("Insert a valid number!");
             getPcNumber();
-            return;
         }
     }//getPcNumber()
 
@@ -153,7 +151,6 @@ public class MainController {
         }else {
             System.out.println("Insert a valid number!");
             getRouterNumber();
-            return;
         }
     }//getRouterNumber()
 
@@ -177,7 +174,7 @@ public class MainController {
             if (ifaces != null) {
                 System.out.println("(DEBUG) Create the router . . .");
                 // Create the router
-                nodes.add(new Router(routerName, "", ifaces.length, ifaces, "STATIC"));
+                nodes.add(new Router(routerName, "", ifaces.length, ifaces, "static"));
             }else {
                 System.out.println("ifaces array is empty");
                 getRouterInformation();
@@ -234,18 +231,7 @@ public class MainController {
                 }
                 //--------> SHOULD BE A CHECK ON netmask FORMAT HERE !!
 
-
-                // IFACE gateway
-                System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " Gateway: ");
-                tempGateway = br.readLine();
-                if(tempGateway == null || tempGateway.isEmpty()) {
-                    System.out.println("\t\tThis field cannot be empty!");
-                    return null;
-                }
-                //--------> SHOULD BE A CHECK ON gateway FORMAT HERE !!
-
-
-                tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, tempGateway);
+                tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, "");
             }
             return tempIfaces;
 
@@ -312,12 +298,16 @@ public class MainController {
             // Print actual network
             printNetwork();
 
+            // Create lab conf file
+            createLabConfFile(path);
+
             // Create folder for nodes
             for(NetworkNode node : nodes)
                 createNodeFolder(path, node);
-            
-            // Create lab conf file
-            createLabConfFile(path);
+
+            // Call Interface controller to modify interfaces file
+            InterfaceController ic = new InterfaceController(nodes);
+            ic.writeInterfaces();
         }
         catch ( IOException ex ) {
             ex.printStackTrace();
