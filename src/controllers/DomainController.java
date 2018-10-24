@@ -27,43 +27,37 @@ public class DomainController {
     }
 
     public void writeLabConf() {
-        for(Router router : routers)
-            writeLabConfRouter(router);
-    }
-
-    private void writeLabConfPC(PC pc) {
         File labConfFile = new File(path + File.separator + "lab.conf");
-        Interface iface = pc.getInterface();
         try {
             FileOutputStream fos = new FileOutputStream(labConfFile);
             PrintStream ps = new PrintStream(fos);
-            for( Map.Entry<Interface, Integer> entry : collisionDomainsRouter.entrySet()) {
-                if(iface.getGateway().equals(entry.getKey().getAddress())) {
-                    ps.println(pc.getName()+"[0]="+entry.getValue());
-                    return;
-                }
-            }
+            for(Router router : routers)
+                writeLabConfRouter(ps, router);
+            for(PC pc : pcs)
+                writeLabConfPC(ps, pc);
+            ps.close();
         }
-        catch (IOException ex) {
+        catch(IOException ex) {
             ex.printStackTrace();
         }
     }
 
-
-    private void writeLabConfRouter(Router router) {
-        File labConfFile = new File(path + File.separator + "lab.conf");
+    private void writeLabConfRouter(PrintStream ps, Router router) {
         Interface[] ifaces = router.getInterfaces();
-        try {
-            FileOutputStream fos = new FileOutputStream(labConfFile);
-            PrintStream ps = new PrintStream(fos);
-            for(int i = 0; i < ifaces.length; i++) {
-                collisionDomainsRouter.put(ifaces[i], (i+1));
-                ps.println(router.getName()+"["+(i)+"]="+(i+1));
-            }
-            ps.println();
+        for(int i = 0; i < ifaces.length; i++) {
+            collisionDomainsRouter.put(ifaces[i], (i+1));
+            ps.println(router.getName()+"["+(i)+"]="+(i+1));
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        ps.println();
+    }
+
+    private void writeLabConfPC(PrintStream ps, PC pc) {
+        Interface iface = pc.getInterface();
+        for (Map.Entry<Interface, Integer> entry : collisionDomainsRouter.entrySet()) {
+            if (iface.getGateway().equals(entry.getKey().getAddress())) {
+                ps.println(pc.getName() + "[0]=" + entry.getValue());
+                return;
+            }
         }
     }
 }
