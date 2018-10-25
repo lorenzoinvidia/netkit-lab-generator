@@ -270,7 +270,11 @@ public class MainController {
                     return null;
                 }
 
-                tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, "");
+                // IFACE gateway
+                System.out.print("\t\t" + routerName + " interface (" + tempIfaceName + ")" + " gateway (optional): ");
+                tempGateway = br.readLine();
+
+                tempIfaces[i] = new Interface(tempIfaceName, tempIpAddress, tempNetMask, tempGateway);
             }
             return tempIfaces;
 
