@@ -118,7 +118,6 @@ public class MainController {
 
         if(isParsable(temp)) {
             this.numberOfPC = Integer.parseInt(temp);
-            //System.out.println("(DEBUG) Number of PC: " + numberOfPC); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             getPcNumber();
@@ -191,7 +190,6 @@ public class MainController {
 
         if(isParsable(temp)) {
             this.numberOfRouter = Integer.parseInt(temp);
-            //System.out.println("(DEBUG) Number of router: " + numberOfRouter); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             getRouterNumber();
@@ -216,7 +214,6 @@ public class MainController {
             Interface[] ifaces = getRouterInterfaces(routerName);
 
             if (ifaces != null) {
-                //System.out.println("(DEBUG) Create the router . . .");
                 // Create the router
                 nodes.add(new Router(routerName, "", ifaces.length, ifaces, "static"));
             }else {
@@ -239,7 +236,6 @@ public class MainController {
 
         if(isParsable(temp)){
             numOfInterfaces = Integer.parseInt(temp);
-            //System.out.println("\t(DEBUG) Number of interfaces: " + numOfInterfaces); //DEBUG
         }else {
             System.out.println("Insert a valid number!");
             return null;
@@ -355,8 +351,6 @@ public class MainController {
         System.out.println("Final network nodes: ");
         System.out.println(tempPrint);
         setNetworkConfig(tempPrint);
-
-
     }
 
     public void init(String path) {

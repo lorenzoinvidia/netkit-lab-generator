@@ -12,7 +12,7 @@ public class Main {
 
     private static void initLaboratoryTest(String defaultLabPath) {
 
-        // Remove all file inside labTestFolder
+        // Remove all file inside labFolder
         File tempFile = new File(defaultLabPath);
         if(tempFile.isDirectory()) {
             try {
@@ -42,7 +42,7 @@ public class Main {
             ps.println("lab.conf");
 
             //Laboratory
-            List<String> stringList = Files.readAllLines(Paths.get(defaultPath + File.separator + "labTestFolder" + File.separator + "lab.conf"));
+            List<String> stringList = Files.readAllLines(Paths.get(defaultPath + File.separator + "labFolder" + File.separator + "lab.conf"));
             for (String s:stringList){
                 ps.println("\t" + s);
             }
@@ -59,9 +59,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Static data for the moment
-        String defaultLabPath = "netkit-lab-generator/labTestFolder";
-        String defaultPath = "netkit-lab-generator";
+        // Static data
+        String defaultLabPath = "lab-generator/labFolder";
+        String defaultPath = "lab-generator";
 
         // Init laboratory
         initLaboratoryTest(defaultLabPath);
