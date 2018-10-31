@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 public class MainController {
 
+    // Network
+    private String networkConfig;
+
     // Buffer reader to read user input
     private BufferedReader br;
 
@@ -35,6 +38,12 @@ public class MainController {
         this.numberOfPC = 0;
         this.numberOfRouter = 0;
         this.nodes = new ArrayList<>();
+    }
+
+    public String getNetworkConfig(){ return  this.networkConfig; }
+
+    public void setNetworkConfig(String networkConfig){
+        this.networkConfig = networkConfig;
     }
 
     public int getNumberOfPC() {
@@ -341,8 +350,13 @@ public class MainController {
 
 
     private void printNetwork() {
+
+        String tempPrint = nodes.stream().map(NetworkNode::toString).collect(Collectors.joining("\n"));
         System.out.println("Final network nodes: ");
-        System.out.println(nodes.stream().map(NetworkNode::toString).collect(Collectors.joining("\n")));
+        System.out.println(tempPrint);
+        setNetworkConfig(tempPrint);
+
+
     }
 
     public void init(String path) {
