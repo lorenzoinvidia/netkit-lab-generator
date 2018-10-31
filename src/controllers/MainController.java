@@ -207,7 +207,7 @@ public class MainController {
             Interface[] ifaces = getRouterInterfaces(routerName);
 
             if (ifaces != null) {
-                System.out.println("(DEBUG) Create the router . . .");
+                //System.out.println("(DEBUG) Create the router . . .");
                 // Create the router
                 nodes.add(new Router(routerName, "", ifaces.length, ifaces, "static"));
             }else {

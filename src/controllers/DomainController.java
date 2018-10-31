@@ -56,14 +56,16 @@ public class DomainController {
                 if(!(otherInterface.isEmpty())) {
                     Integer domainOtherInterface = collisionDomainsRouter.get(otherInterface.get(0));
                     collisionDomainsRouter.put(ifaces[i], (domainOtherInterface));
-                    ps.println(router.getName()+"["+(i)+"]="+(domainOtherInterface));
+
+                    //System.out.println("(DEBUG) domain: " + (char)(domainOtherInterface + 'A'));
+                    ps.println(router.getName()+"["+(i)+"]="+ (char)(domainOtherInterface + 'A'));
                     ps.println();
                     return;
                 }
             }
             // else create the new domain
             collisionDomainsRouter.put(ifaces[i], (numberDomain));
-            ps.println(router.getName()+"["+(i)+"]="+(numberDomain));
+            ps.println(router.getName()+"["+(i)+"]="+ (char)(numberDomain + 'A'));
             numberDomain++;
         }
         ps.println();
@@ -73,7 +75,9 @@ public class DomainController {
         Interface iface = pc.getInterface();
         for (Map.Entry<Interface, Integer> entry : collisionDomainsRouter.entrySet()) {
             if (iface.getGateway().equals(entry.getKey().getAddress())) {
-                ps.println(pc.getName() + "[0]=" + entry.getValue());
+
+                //System.out.println("(DEBUG) domain: " + (char)(entry.getValue()+'A'));
+                ps.println(pc.getName() + "[0]=" + (char)(entry.getValue()+'A'));
                 return;
             }
         }
